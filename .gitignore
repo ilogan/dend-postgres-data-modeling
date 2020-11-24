@@ -3,3 +3,6 @@ environment
 
 # vscode related
 .vscode
+
+# python related
+__pycache__
