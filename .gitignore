@@ -6,3 +6,4 @@ environment
 
 # python related
 __pycache__
+.ipynb_checkpoints
