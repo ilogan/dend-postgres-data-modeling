@@ -14,7 +14,7 @@ songplay_table_create = ("""
         songplay_id SERIAL PRIMARY KEY,
         start_time TIMESTAMP,
         user_id INTEGER,
-        level INTEGER,
+        level VARCHAR,
         song_id VARCHAR,
         artist_id VARCHAR, 
         session_id INTEGER,
@@ -30,7 +30,7 @@ songplay_table_create = ("""
 user_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS users(
-        user_id SERIAL PRIMARY KEY,
+        user_id INTEGER PRIMARY KEY,
         first_name VARCHAR,
         last_name VARCHAR,
         gender CHAR(1),
@@ -77,24 +77,48 @@ time_table_create = ("""
 # INSERT RECORDS
 
 songplay_table_insert = ("""
+    --sql
+    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, 
+                            session_id, location, user_agent)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
 """)
 
 user_table_insert = ("""
+    --sql
+    INSERT INTO users (user_id, first_name, last_name, gender, level)
+    VALUES (%s, %s, %s, %s, %s);
 """)
 
 song_table_insert = ("""
+    --sql
+    INSERT INTO songs (song_id, title, artist_id, year, duration)
+    VALUES (%s, %s, %s, %s, %s);
 """)
 
 artist_table_insert = ("""
+    --sql
+    INSERT INTO artists (artist_id, name, location, latitude, longitude)
+    VALUES (%s, %s, %s, %s, %s);
 """)
 
 
 time_table_insert = ("""
+    --sql
+    INSERT INTO time (start_time, hour, day, week, month, year, weekday)
+    VALUES (%s, %s, %s, %s, %s, %s, %s);
 """)
 
 # FIND SONGS
 
 song_select = ("""
+    --sql
+    SELECT s.song_id, s.artist_id
+    FROM songs AS s 
+        JOIN artists AS a 
+        ON s.artist_id = a.artist_id
+    WHERE s.title = %s
+        AND a.name = %s
+        AND s.duration = %s;
 """)
 
 # QUERY LISTS
