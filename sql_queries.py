@@ -86,7 +86,8 @@ songplay_table_insert = ("""
 user_table_insert = ("""
     --sql
     INSERT INTO users (user_id, first_name, last_name, gender, level)
-    VALUES (%s, %s, %s, %s, %s);
+    VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (user_id) DO NOTHING;
 """)
 
 song_table_insert = ("""
@@ -98,14 +99,16 @@ song_table_insert = ("""
 artist_table_insert = ("""
     --sql
     INSERT INTO artists (artist_id, name, location, latitude, longitude)
-    VALUES (%s, %s, %s, %s, %s);
+    VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT (artist_id) DO NOTHING;
 """)
 
 
 time_table_insert = ("""
     --sql
     INSERT INTO time (start_time, hour, day, week, month, year, weekday)
-    VALUES (%s, %s, %s, %s, %s, %s, %s);
+    VALUES (%s, %s, %s, %s, %s, %s, %s)
+    ON CONFLICT (start_time) DO NOTHING;
 """)
 
 # FIND SONGS
