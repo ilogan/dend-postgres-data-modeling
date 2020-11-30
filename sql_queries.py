@@ -45,7 +45,7 @@ song_table_create = ("""
         title VARCHAR,
         artist_id VARCHAR,
         year INTEGER,
-        duration REAL,
+        duration FLOAT,
         FOREIGN KEY(artist_id) REFERENCES artists(artist_id)
     );
 """)
