@@ -10,12 +10,15 @@ def process_song_file(cur, filepath):
     df = pd.DataFrame([pd.read_json(filepath, typ="series")])
 
     # insert artist record
-    artist_data = df.loc[:, ["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]].values[0].tolist()
+    artist_data = df.loc[:, ["artist_id", "artist_name", "artist_location",
+                             "artist_latitude", "artist_longitude"]].values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
-    
+
     # insert song record
-    song_data = df.loc[:, ["song_id", "title", "artist_id", "year", "duration"]].values[0].tolist()
+    song_data = df.loc[:, ["song_id", "title", "artist_id",
+                           "year", "duration"]].values[0].tolist()
     cur.execute(song_table_insert, song_data)
+
 
 def process_log_file(cur, filepath):
     # open log file
@@ -27,19 +30,23 @@ def process_log_file(cur, filepath):
     # convert timestamp column to datetime
     df["ts"] = pd.to_datetime(df["ts"], unit="ms")
     t = df["ts"]
-    
+
     # insert time data records
-    time_data = [t, t.dt.hour, t.dt.day, t.dt.isocalendar().week, t.dt.month, t.dt.year, t.dt.day_name()]
-    column_labels = ["timestamp", "hour", "day", "week of year", "month", "year", "weekday"]
-    time_series = [series.rename(column_labels[i]) for i, series in enumerate(time_data)]
-    
+    time_data = [t, t.dt.hour, t.dt.day, t.dt.isocalendar(
+    ).week, t.dt.month, t.dt.year, t.dt.day_name()]
+    column_labels = ["timestamp", "hour", "day",
+                     "week of year", "month", "year", "weekday"]
+    time_series = [series.rename(column_labels[i])
+                   for i, series in enumerate(time_data)]
+
     time_df = pd.concat(time_series, axis=1)
 
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = df.loc[:,["userId", "firstName", "lastName", "gender", "level"]].drop_duplicates()
+    user_df = df.loc[:, ["userId", "firstName",
+                         "lastName", "gender", "level"]].drop_duplicates()
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -50,7 +57,7 @@ def process_log_file(cur, filepath):
         # get songid and artistid from song and artist tables
         cur.execute(song_select, (row.song, row.artist, row.length))
         results = cur.fetchone()
-        
+
         if(row.artist == "Elena"):
             print(row.length)
         if results:
@@ -59,7 +66,8 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = [row.ts, row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent]
+        songplay_data = [row.ts, row.userId, row.level, songid,
+                         artistid, row.sessionId, row.location, row.userAgent]
         cur.execute(songplay_table_insert, songplay_data)
 
 
@@ -67,8 +75,8 @@ def process_data(cur, conn, filepath, func):
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
-        files = glob.glob(os.path.join(root,'*.json'))
-        for f in files :
+        files = glob.glob(os.path.join(root, '*.json'))
+        for f in files:
             all_files.append(os.path.abspath(f))
 
     # get total number of files found
@@ -83,9 +91,10 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+    conn = psycopg2.connect(
+        "host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
-
+    reveal_type(cur)
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
     process_data(cur, conn, filepath='data/log_data', func=process_log_file)
 
