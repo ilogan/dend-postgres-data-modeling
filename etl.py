@@ -3,9 +3,14 @@ import glob
 import psycopg2
 import pandas as pd
 from sql_queries import *
+from typing import Callable
+
+# psycopg2 types
+PGCursor: psycopg2.extensions.cursor = psycopg2.extensions.cursor
+PGConnection: psycopg2.extensions.connection = psycopg2.extensions.connection
 
 
-def process_song_file(cur, filepath):
+def process_song_file(cur: PGCursor, filepath: str) -> None:
     # open song file
     df = pd.DataFrame([pd.read_json(filepath, typ="series")])
 
@@ -20,7 +25,7 @@ def process_song_file(cur, filepath):
     cur.execute(song_table_insert, song_data)
 
 
-def process_log_file(cur, filepath):
+def process_log_file(cur: PGCursor, filepath: str) -> None:
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -71,7 +76,11 @@ def process_log_file(cur, filepath):
         cur.execute(songplay_table_insert, songplay_data)
 
 
-def process_data(cur, conn, filepath, func):
+def process_data(cur: PGCursor,
+                 conn: PGConnection,
+                 filepath: str,
+                 func: Callable[[PGCursor, str], None]) -> None:
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -90,11 +99,10 @@ def process_data(cur, conn, filepath, func):
         print('{}/{} files processed.'.format(i, num_files))
 
 
-def main():
+def main() -> None:
     conn = psycopg2.connect(
         "host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
-    reveal_type(cur)
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
     process_data(cur, conn, filepath='data/log_data', func=process_log_file)
 

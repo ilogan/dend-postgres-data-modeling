@@ -1,8 +1,12 @@
 import psycopg2
 from sql_queries import create_table_queries, drop_table_queries
+from typing import Tuple
+
+PGCursor: psycopg2.extensions.cursor = psycopg2.extensions.cursor
+PGConnection: psycopg2.extensions.connection = psycopg2.extensions.connection
 
 
-def create_database():
+def create_database() -> Tuple[PGCursor, PGConnection]:
     # connect to default database
     conn = psycopg2.connect(
         "host=127.0.0.1 dbname=studentdb user=student password=student")
@@ -25,19 +29,19 @@ def create_database():
     return cur, conn
 
 
-def drop_tables(cur, conn):
+def drop_tables(cur, conn) -> None:
     for query in drop_table_queries:
         cur.execute(query)
         conn.commit()
 
 
-def create_tables(cur, conn):
+def create_tables(cur, conn) -> None:
     for query in create_table_queries:
         cur.execute(query)
         conn.commit()
 
 
-def main():
+def main() -> None:
     cur, conn = create_database()
 
     drop_tables(cur, conn)
