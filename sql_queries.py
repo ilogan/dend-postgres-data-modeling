@@ -1,3 +1,12 @@
+"""SQL queries used to model the PostgreSQL Database.
+
+Tables:
+    fact: songplays
+    dimensions: users, songs, artists, time
+
+Queries are ordered as follows: DROP, CREATE, INSERT, SELECT.
+"""
+
 # DROP TABLES
 
 songplay_table_drop = "DROP TABLE IF EXISTS songplays"
@@ -16,7 +25,7 @@ songplay_table_create = ("""
         user_id INTEGER,
         level VARCHAR,
         song_id VARCHAR,
-        artist_id VARCHAR, 
+        artist_id VARCHAR,
         session_id INTEGER,
         location VARCHAR,
         user_agent VARCHAR,
@@ -65,7 +74,7 @@ time_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS time(
         start_time TIMESTAMP PRIMARY KEY,
-        hour INTEGER, 
+        hour INTEGER,
         day INTEGER,
         week INTEGER,
         month INTEGER,
@@ -78,7 +87,7 @@ time_table_create = ("""
 
 songplay_table_insert = ("""
     --sql
-    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, 
+    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id,
                             session_id, location, user_agent)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
 """)
@@ -116,8 +125,8 @@ time_table_insert = ("""
 song_select = ("""
     --sql
     SELECT s.song_id, s.artist_id
-    FROM songs AS s 
-        JOIN artists AS a 
+    FROM songs AS s
+        JOIN artists AS a
         ON s.artist_id = a.artist_id
     WHERE s.title = %s
         AND a.name = %s
@@ -126,5 +135,7 @@ song_select = ("""
 
 # QUERY LISTS
 
-create_table_queries = [user_table_create, artist_table_create, song_table_create, time_table_create, songplay_table_create]
-drop_table_queries = [songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
+create_table_queries = [user_table_create, artist_table_create,
+                        song_table_create, time_table_create, songplay_table_create]
+drop_table_queries = [songplay_table_drop, user_table_drop,
+                      song_table_drop, artist_table_drop, time_table_drop]
