@@ -84,8 +84,6 @@ def process_log_file(cur: PGCursor, filepath: str) -> None:
         cur.execute(song_select, (row.song, row.artist, row.length))
         results = cur.fetchone()
 
-        if(row.artist == "Elena"):
-            print(row.length)
         if results:
             songid, artistid = results
         else:
