@@ -21,9 +21,9 @@ songplay_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS songplays(
         songplay_id SERIAL PRIMARY KEY,
-        start_time TIMESTAMP,
-        user_id INTEGER,
-        level VARCHAR,
+        start_time TIMESTAMP NOT NULL,
+        user_id INTEGER NOT NULL,
+        level VARCHAR NOT NULL,
         song_id VARCHAR,
         artist_id VARCHAR,
         session_id INTEGER,
@@ -40,10 +40,10 @@ user_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS users(
         user_id INTEGER PRIMARY KEY,
-        first_name VARCHAR,
-        last_name VARCHAR,
+        first_name VARCHAR NOT NULL,
+        last_name VARCHAR NOT NULL,
         gender CHAR(1),
-        level VARCHAR
+        level VARCHAR NOT NULL
     );
 """)
 
@@ -51,8 +51,8 @@ song_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS songs(
         song_id VARCHAR PRIMARY KEY,
-        title VARCHAR,
-        artist_id VARCHAR,
+        title VARCHAR NOT NULL,
+        artist_id VARCHAR NOT NULL,
         year INTEGER,
         duration FLOAT,
         FOREIGN KEY(artist_id) REFERENCES artists(artist_id)
@@ -63,7 +63,7 @@ artist_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS artists(
         artist_id VARCHAR PRIMARY KEY,
-        name VARCHAR,
+        name VARCHAR NOT NULL,
         location VARCHAR,
         latitude DOUBLE PRECISION,
         longitude DOUBLE PRECISION
@@ -74,12 +74,12 @@ time_table_create = ("""
     --sql
     CREATE TABLE IF NOT EXISTS time(
         start_time TIMESTAMP PRIMARY KEY,
-        hour INTEGER,
-        day INTEGER,
-        week INTEGER,
-        month INTEGER,
-        year INTEGER,
-        weekday VARCHAR(9)
+        hour INTEGER NOT NULL,
+        day INTEGER NOT NULL,
+        week INTEGER NOT NULL,
+        month INTEGER NOT NULL,
+        year INTEGER NOT NULL,
+        weekday VARCHAR(9) NOT NULL
     );
 """)
 
