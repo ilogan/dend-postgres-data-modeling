@@ -96,7 +96,11 @@ user_table_insert = ("""
     --sql
     INSERT INTO users (user_id, first_name, last_name, gender, level)
     VALUES (%s, %s, %s, %s, %s)
-    ON CONFLICT (user_id) DO NOTHING;
+    ON CONFLICT (user_id) DO UPDATE
+    SET first_name = EXCLUDED.first_name,
+        gender = EXCLUDED.gender,
+        level = EXCLUDED.level;
+    ;
 """)
 
 song_table_insert = ("""
@@ -109,7 +113,10 @@ artist_table_insert = ("""
     --sql
     INSERT INTO artists (artist_id, name, location, latitude, longitude)
     VALUES (%s, %s, %s, %s, %s)
-    ON CONFLICT (artist_id) DO NOTHING;
+    ON CONFLICT (artist_id) DO UPDATE
+    SET location = EXCLUDED.location,
+        latitude = EXCLUDED.latitude,
+        longitude = EXCLUDED.longitude;
 """)
 
 
